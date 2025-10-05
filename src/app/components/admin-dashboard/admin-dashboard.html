@@ -1,0 +1,177 @@
+<div class="min-h-screen bg-gradient-to-br from-green-400 to-emerald-600 flex flex-col text-gray-800">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-green-700">Admin Dashboard</h1>
+    <button
+      (click)="logout()"
+      class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200"
+    >
+      Logout
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-6 overflow-y-auto">
+    <h2 class="text-2xl font-semibold text-white mb-6">User Management</h2>
+
+    <!-- Add User Button -->
+    <div class="flex justify-end mb-4">
+      <button
+        (click)="openAddUserModal()"
+        class="bg-white text-green-700 font-semibold px-4 py-2 rounded-md shadow hover:bg-green-50 transition"
+      >
+        + Add User
+      </button>
+    </div>
+
+    <!-- User Table -->
+    <div class="bg-white rounded-xl shadow-md overflow-x-auto">
+      <table class="min-w-full">
+        <thead class="bg-green-100 text-left text-gray-700">
+          <tr>
+            <th class="py-3 px-4">#</th>
+            <th class="py-3 px-4">Name</th>
+            <th class="py-3 px-4">Email</th>
+            <!-- <th class="py-3 px-4">Department</th> -->
+            <th class="py-3 px-4">Role</th>
+            <th class="py-3 px-4 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let user of paginatedUsers; let i = index"
+            class="border-b hover:bg-green-50 transition"
+          >
+            <td class="py-3 px-4">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+            <td class="py-3 px-4">{{ user.name }}</td>
+            <td class="py-3 px-4">{{ user.companyEmail }}</td>
+            <!-- <td class="py-3 px-4">{{ user.department }}</td> -->
+            <td class="py-3 px-4 capitalize">{{ user.role }}</td>
+            <td class="py-3 px-4 text-center space-x-2">
+              <button
+                (click)="openUpdateModal(user)"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+              >
+                Update
+              </button>
+              <button
+                (click)="removeUser(user._id)"
+                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center items-center space-x-2 mt-6">
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="bg-white text-green-700 px-3 py-1 rounded-md shadow disabled:opacity-50"
+      >
+        Prev
+      </button>
+      <span class="text-white font-medium">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+        class="bg-white text-green-700 px-3 py-1 rounded-md shadow disabled:opacity-50"
+      >
+        Next
+      </button>
+    </div>
+  </main>
+
+  <!-- Add/Update User Modal -->
+  <div
+    *ngIf="showModal"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+  >
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+      <h3 class="text-lg font-semibold mb-4 text-green-700">
+        {{ editingUser ? 'Update User' : 'Add New User' }}
+      </h3>
+
+      <form (ngSubmit)="saveUser()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input
+            type="text"
+            [(ngModel)]="formData.name"
+            name="name"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input
+            type="email"
+            [(ngModel)]="formData.companyEmail"
+            name="email"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <input
+            type="password"
+            [(ngModel)]="formData.password"
+            name="password"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+            />
+        </div>
+
+        <!-- <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+          <input
+            type="text"
+            [(ngModel)]="formData.department"
+            name="department"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+          />
+        </div> -->
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+          <select
+            [(ngModel)]="formData.role"
+            name="role"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+          >
+            <option value="HR">HR</option>
+            <option value="Employee">Employee</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end space-x-2 mt-4">
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          >
+            {{ editingUser ? 'Update' : 'Add' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

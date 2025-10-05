@@ -80,24 +80,24 @@ export class EmployeeDashboard implements OnInit {
     });
   }
 
-  openLeaveModal() {
-    this.showLeaveModal = true;
-    this.leaveData = { from: '', to: '', reason: '' };
-  }
+  // openLeaveModal() {
+  //   this.showLeaveModal = true;
+  //   this.leaveData = { from: '', to: '', reason: '' };
+  // }
 
-  applyLeave() {
-    this.attendanceService.applyLeave(this.leaveData).subscribe({
-      next: () => {
-        alert('Leave applied successfully!');
-        this.showLeaveModal = false;
-      },
-      error: (err:any) => console.error(err)
-    });
-  }
+  // applyLeave() {
+  //   this.attendanceService.applyLeave(this.leaveData).subscribe({
+  //     next: () => {
+  //       alert('Leave applied successfully!');
+  //       this.showLeaveModal = false;
+  //     },
+  //     error: (err:any) => console.error(err)
+  //   });
+  // }
 
-  closeLeaveModal() {
-    this.showLeaveModal = false;
-  }
+  // closeLeaveModal() {
+  //   this.showLeaveModal = false;
+  // }
 
   logout() {
     this.authService.logout();

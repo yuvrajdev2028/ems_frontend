@@ -15,11 +15,11 @@ export class AttendanceService {
     return this.http.get(`${this.baseUrl}/markAttendance`);
   }
 
-  applyLeave(data: { from: string; to: string; reason: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/leave/apply`, data);
-  }
+  // applyLeave(data: { from: string; to: string; reason: string }): Observable<any> {
+  //   return this.http.post(`${this.baseUrl}/leave/apply`, data);
+  // }
 
   getMyAttendance(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/attendance/my`);
+    return this.http.get(`${this.baseUrl}/getAttendance`);
   }
 }
